@@ -13,7 +13,7 @@
             margin: 0;
             display: flex;
             flex-direction: column;
-            height: 100vh; /* Keeps everything inside the screen */
+            height: 100vh;
             overflow: hidden;
         }
 
@@ -25,33 +25,50 @@
             flex-shrink: 0;
         }
 
-        h1 { margin: 0 0 10px 0; font-size: 28px; color: #C0C0C0; }
+        h1 { margin: 0 0 10px 0; font-size: 24px; color: #C0C0C0; }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
 
         input {
             background-color: #000;
             color: #00ff00;
             border: 1px solid #708090;
             padding: 10px;
-            width: 70%;
+            width: 60%;
             font-family: inherit;
             outline: none;
         }
 
         button {
             border-radius: 50%;
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             background-color: #708090;
             color: white;
             cursor: pointer;
             border: none;
-            font-size: 18px;
-            vertical-align: middle;
+            font-size: 20px;
+            flex-shrink: 0;
         }
 
-        /* The viewing area */
+        /* The "Emergency" Link next to the button */
+        #ext-link {
+            display: none; /* Hidden until you search */
+            color: #ff4d4d;
+            font-weight: bold;
+            text-decoration: underline;
+            font-size: 12px;
+            max-width: 80px;
+            line-height: 1;
+        }
+
         #browser-viewport {
-            flex-grow: 1; /* Takes up all available space between header and footer */
+            flex-grow: 1;
             width: 100%;
             background-color: #111;
             border: none;
@@ -66,22 +83,12 @@
             text-align: center;
         }
 
-        /* FOOTER FIX: Stays at the bottom no matter what */
         footer {
             background-color: #2a2a2a;
-            padding: 10px;
-            font-size: 14px;
-            color: #708090;
-            border-top: 1px solid #333;
-            flex-shrink: 0;
+            padding: 5px;
+            font-size: 11px;
+            color: #555;
             text-align: center;
-        }
-
-        #status a {
-            color: #ff4d4d;
-            font-weight: bold;
-            text-decoration: underline;
-            margin-left: 10px;
         }
     </style>
 </head>
@@ -89,32 +96,33 @@
 
     <header>
         <h1>DARK BROWSER</h1>
-        <input type="text" id="addressBar" placeholder="Search FrogFind..." autocomplete="off">
-        <button onclick="navigate()">&#9758;</button>
+        <div class="search-container">
+            <input type="text" id="addressBar" placeholder="Search FrogFind..." autocomplete="off">
+            <button onclick="navigate()">&#9758;</button>
+            <a id="ext-link" href="#" target="_blank">OPEN EXTERNAL</a>
+        </div>
     </header>
 
     <div id="home-screen">
-        <p style="color: #00ff00;">[ SYSTEM ONLINE ]</p>
-        <p>Using FrogFind Engine</p>
+        <p style="color: #00ff00;">[ SYSTEM READY ]</p>
     </div>
 
     <iframe id="browser-viewport" style="display:none;"></iframe>
 
     <footer>
-        <div id="status">Status: Ready</div>
+        Encryption: Active
     </footer>
 
     <script>
         const addressBar = document.getElementById('addressBar');
         const viewport = document.getElementById('browser-viewport');
         const home = document.getElementById('home-screen');
-        const statusDiv = document.getElementById('status');
+        const extLink = document.getElementById('ext-link');
 
         function navigate() {
             let url = addressBar.value.trim();
             if (!url) return;
 
-            // FrogFind Search Logic
             if (!url.includes('.') || url.includes(' ')) {
                 url = 'http://frogfind.com/?q=' + encodeURIComponent(url);
             } else {
@@ -123,16 +131,13 @@
                 }
             }
 
-            loadURL(url);
-        }
-
-        function loadURL(url) {
             home.style.display = 'none';
             viewport.style.display = 'block';
             viewport.src = url;
-            
-            // This updates the footer so you can actually click the link
-            statusDiv.innerHTML = `Loading... <a href="${url}" target="_blank">FORCE OPEN LINK</a>`;
+
+            // Make the external link visible and update its destination
+            extLink.href = url;
+            extLink.style.display = 'inline-block';
         }
 
         addressBar.addEventListener('keypress', (e) => {
