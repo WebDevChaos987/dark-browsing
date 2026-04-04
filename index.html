@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Web&reg;</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: "Lucida Console", "Courier New", monospace;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-bottom: 2px solid #708090;
+            text-align: center;
+        }
+
+        h1 { margin: 0 0 15px 0; font-size: 32px; color: #C0C0C0; text-transform: uppercase; letter-spacing: 2px; }
+
+        input {
+            background-color: #000;
+            color: #00ff00;
+            border: 1px solid #708090;
+            padding: 10px;
+            width: 50%;
+            font-family: inherit;
+            outline: none;
+        }
+
+        button {
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            background-color: #708090;
+            color: white;
+            cursor: pointer;
+            border: none;
+            font-size: 18px;
+            vertical-align: middle;
+            transition: 0.2s;
+        }
+
+        button:hover { background-color: #C0C0C0; }
+
+        #browser-viewport {
+            flex: 1;
+            width: 100%;
+            background-color: #111;
+            border: none;
+        }
+
+        #home-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .links { margin-top: 20px; }
+        a { color: #4da6ff; text-decoration: none; margin: 0 10px; }
+        a:hover { text-decoration: underline; }
+
+        footer {
+            background-color: #2a2a2a;
+            padding: 8px 15px;
+            font-size: 12px;
+            color: #708090;
+            border-top: 1px solid #333;
+        }
+
+        #status a {
+            color: #ff4d4d;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Dark Browser</h1>
+        <input type="text" id="addressBar" placeholder="Search FrogFind..." autocomplete="off">
+        <button onclick="navigate()">&#9758;</button>
+    </header>
+
+    <div id="home-screen">
+        <p style="color: #00ff00;">[ SYSTEM ONLINE ]</p>
+        <p>Using FrogFind Engine for compatibility.</p>
+        <div class="links">
+            <a href="#" onclick="quickLoad('https://frogfind.com')">Open FrogFind Home</a>
+        </div>
+    </div>
+
+    <iframe id="browser-viewport" style="display:none;"></iframe>
+
+    <footer>
+        Status: <span id="status">Ready</span> | Encryption: <span style="color: #00ff00;">Active</span>
+    </footer>
+
+    <script>
+        const addressBar = document.getElementById('addressBar');
+        const viewport = document.getElementById('browser-viewport');
+        const home = document.getElementById('home-screen');
+        const statusSpan = document.getElementById('status');
+
+        function navigate() {
+            let url = addressBar.value.trim();
+            if (!url) return;
+
+            // If it's a search term (no dots or has spaces), use FrogFind
+            if (!url.includes('.') || url.includes(' ')) {
+                url = 'http://frogfind.com/?q=' + encodeURIComponent(url);
+            } else {
+                if (!url.startsWith('http')) {
+                    url = 'https://' + url;
+                }
+            }
+
+            loadURL(url);
+        }
+
+        function loadURL(url) {
+            home.style.display = 'none';
+            viewport.style.display = 'block';
+            viewport.src = url;
+            
+            statusSpan.innerHTML = `Connected to ${url}. <a href="${url}" target="_blank">External Link</a> if blocked.`;
+        }
+
+        function quickLoad(url) {
+            addressBar.value = url;
+            loadURL(url);
+        }
+
+        addressBar.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') navigate();
+        });
+    </script>
+</body>
+</html>
